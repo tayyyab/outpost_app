@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:outpost_app/assets.dart';
 import 'package:outpost_app/styles.dart';
+import 'package:outpost_app/title_screen/title_screen_ui.dart';
 
-class TitleScreen extends StatelessWidget {
+class TitleScreen extends StatefulWidget {
   const TitleScreen({super.key});
+
+  @override
+  State<TitleScreen> createState() => _TitleScreenState();
+}
+
+class _TitleScreenState extends State<TitleScreen> {
+  Color get _emitColor =>
+      AppColors.emitColors[_difficultyOverride ?? _difficulty];
+  Color get _orbColor =>
+      AppColors.emitColors[_difficultyOverride ?? _difficulty];
+
+  int _difficulty = 0;
+  int? _difficultyOverride;
+
+  void _handleDifficultyPressed(int value) {
+    setState(() => _difficulty = value);
+  }
+
+  void _handleDifficultyFocused(int? value) {
+    setState(() => _difficultyOverride = value);
+  }
 
   final _finalReceiveLightAmt = 0.7;
   final _finalEmitLightAmt = 0.5;
@@ -44,6 +66,11 @@ class TitleScreen extends StatelessWidget {
               color: emitColor,
               image: AssetPaths.titleFgEmit,
               lightAmt: _finalEmitLightAmt),
+          Positioned.fill(
+              child: TitleScreenUi(
+                  difficulty: _difficulty,
+                  onDifficultyPressed: _handleDifficultyPressed,
+                  onDifficultyFocused: _handleDifficultyFocused))
         ],
       )),
     );

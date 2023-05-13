@@ -1,4 +1,5 @@
 import 'package:extra_alignments/extra_alignments.dart';
+import 'package:focusable_control_builder/focusable_control_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -7,18 +8,33 @@ import '../common/ui_scaler.dart';
 import '../styles.dart';
 
 class TitleScreenUi extends StatelessWidget {
-  const TitleScreenUi({super.key});
+  const TitleScreenUi({
+    super.key,
+    required this.difficulty,
+    required this.onDifficultyPressed,
+    required this.onDifficultyFocused,
+  });
+
+  final int difficulty;
+  final void Function(int difficulty) onDifficultyPressed;
+  final void Function(int? difficulty) onDifficultyFocused;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 40, horizontal: 50),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 50),
       child: Stack(children: [
-        TopLeft(
+        const TopLeft(
+          child: UiScaler(alignment: Alignment.topLeft, child: _TitleText()),
+        ),
+        BottomLeft(
           child: UiScaler(
-            alignment: Alignment.topLeft,
-            child: _TitleText(),
-          ),
+              alignment: Alignment.bottomLeft,
+              child: _DifficultyBtns(
+                difficulty: difficulty,
+                onDifficultyPressed: onDifficultyPressed,
+                onDifficultyFocused: onDifficultyFocused,
+              )),
         )
       ]),
     );
@@ -49,6 +65,102 @@ class _TitleText extends StatelessWidget {
         ),
         Text('INTO THE UNKNOWN', style: TextStyles.h3)
       ],
+    );
+  }
+}
+
+class _DifficultyBtns extends StatelessWidget {
+  const _DifficultyBtns({
+    required this.difficulty,
+    required this.onDifficultyPressed,
+    required this.onDifficultyFocused,
+  });
+
+  final int difficulty;
+  final void Function(int difficulty) onDifficultyPressed;
+  final void Function(int? difficulty) onDifficultyFocused;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _DifficultyBtn(
+            label: 'Casule',
+            selected: difficulty == 0,
+            onPressed: () => onDifficultyPressed(0),
+            onHover: (over) => onDifficultyFocused(over ? 0 : null)),
+        _DifficultyBtn(
+            label: 'Normal',
+            selected: difficulty == 1,
+            onPressed: () => onDifficultyPressed(1),
+            onHover: (over) => onDifficultyFocused(over ? 1 : null)),
+        _DifficultyBtn(
+            label: 'Hardcore',
+            selected: difficulty == 2,
+            onPressed: () => onDifficultyPressed(2),
+            onHover: (over) => onDifficultyFocused(over ? 2 : null)),
+        const Gap(20),
+      ],
+    );
+  }
+}
+
+class _DifficultyBtn extends StatelessWidget {
+  const _DifficultyBtn({
+    required this.label,
+    required this.selected,
+    required this.onPressed,
+    required this.onHover,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onPressed;
+  final void Function(bool hasFocus) onHover;
+
+  @override
+  Widget build(BuildContext context) {
+    return FocusableControlBuilder(
+      onPressed: onPressed,
+      onHoverChanged: (_, state) => onHover.call(state.isHovered),
+      builder: (_, state) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 250,
+            height: 60,
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00D1FF).withOpacity(.1),
+                    border: Border.all(color: Colors.white, width: 5),
+                  ),
+                ),
+                if (state.isHovered || state.isFocused) ...[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00D1FF).withOpacity(.1),
+                    ),
+                  )
+                ],
+                if (selected) ...[
+                  CenterLeft(
+                    child: Image.asset(AssetPaths.titleSelectedLeft),
+                  ),
+                  CenterRight(
+                    child: Image.asset(AssetPaths.titleSelectedRight),
+                  )
+                ],
+                Center(
+                  child: Text(label.toUpperCase(), style: TextStyles.btn),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
