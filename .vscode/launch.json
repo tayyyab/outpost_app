@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "chrome",
+            "request": "launch",
+            "type": "dart",
+            "args": [ "-d",  "chrome" ]
+        },
+        {
             "name": "outpost_app",
             "request": "launch",
             "type": "dart"
