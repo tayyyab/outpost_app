@@ -1,0 +1,48 @@
+name: outpost_app
+description: A new Flutter project.
+
+publish_to: 'none'  
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  extra_alignments:
+  flextras:
+  flutter_animate:
+  focusable_control_builder:
+  gap:
+  particle_field:
+  provider:
+  rnd:
+  vector_math:
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Exo
+      fonts:
+        - asset: assets/fonts/Exo-Bold.ttf
+        - asset: assets/fonts/Exo-Medium.ttf
+  assets:
+    - assets/images/
+    - assets/fonts/
+  shaders:
+    - assets/shaders/orb_shader.frag
+    - assets/shaders/ui_glitch.frag
