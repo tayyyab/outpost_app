@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:outpost_app/assets.dart';
 import 'package:outpost_app/styles.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:outpost_app/title_screen/title_screen_ui.dart';
 
 class TitleScreen extends StatefulWidget {
@@ -32,46 +33,49 @@ class _TitleScreenState extends State<TitleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final orbColor = AppColors.orbColors[0];
-    final emitColor = AppColors.emitColors[0];
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-          child: Stack(
-        children: [
-          Image.asset(AssetPaths.titleBgBase),
-          _LitImage(
-              color: orbColor,
-              image: AssetPaths.titleBgReceive,
-              lightAmt: _finalReceiveLightAmt),
-          _LitImage(
-              color: orbColor,
-              image: AssetPaths.titleMgBase,
-              lightAmt: _finalReceiveLightAmt),
-          _LitImage(
-              color: orbColor,
-              image: AssetPaths.titleMgReceive,
-              lightAmt: _finalReceiveLightAmt),
-          _LitImage(
-              color: emitColor,
-              image: AssetPaths.titleMgEmit,
-              lightAmt: _finalEmitLightAmt),
-          Image.asset(AssetPaths.titleFgBase),
-          _LitImage(
-              color: orbColor,
-              image: AssetPaths.titleFgReceive,
-              lightAmt: _finalReceiveLightAmt),
-          _LitImage(
-              color: emitColor,
-              image: AssetPaths.titleFgEmit,
-              lightAmt: _finalEmitLightAmt),
-          Positioned.fill(
-              child: TitleScreenUi(
-                  difficulty: _difficulty,
-                  onDifficultyPressed: _handleDifficultyPressed,
-                  onDifficultyFocused: _handleDifficultyFocused))
-        ],
+          child: _AnimatedColors(
+        orbColor: _orbColor,
+        emitColor: _emitColor,
+        builder: (_, orbColor, emitColor) {
+          return Stack(
+            children: [
+              Image.asset(AssetPaths.titleBgBase),
+              _LitImage(
+                  color: orbColor,
+                  image: AssetPaths.titleBgReceive,
+                  lightAmt: _finalReceiveLightAmt),
+              _LitImage(
+                  color: orbColor,
+                  image: AssetPaths.titleMgBase,
+                  lightAmt: _finalReceiveLightAmt),
+              _LitImage(
+                  color: orbColor,
+                  image: AssetPaths.titleMgReceive,
+                  lightAmt: _finalReceiveLightAmt),
+              _LitImage(
+                  color: emitColor,
+                  image: AssetPaths.titleMgEmit,
+                  lightAmt: _finalEmitLightAmt),
+              Image.asset(AssetPaths.titleFgBase),
+              _LitImage(
+                  color: orbColor,
+                  image: AssetPaths.titleFgReceive,
+                  lightAmt: _finalReceiveLightAmt),
+              _LitImage(
+                  color: emitColor,
+                  image: AssetPaths.titleFgEmit,
+                  lightAmt: _finalEmitLightAmt),
+              Positioned.fill(
+                  child: TitleScreenUi(
+                      difficulty: _difficulty,
+                      onDifficultyPressed: _handleDifficultyPressed,
+                      onDifficultyFocused: _handleDifficultyFocused))
+            ],
+          ).animate().fadeIn(duration: 1.seconds, delay: .3.seconds);
+        },
       )),
     );
   }
@@ -97,5 +101,31 @@ class _LitImage extends StatelessWidget {
           BlendMode.modulate),
       child: Image.asset(image),
     );
+  }
+}
+
+class _AnimatedColors extends StatelessWidget {
+  const _AnimatedColors({
+    required this.emitColor,
+    required this.orbColor,
+    required this.builder,
+  });
+
+  final Color emitColor;
+  final Color orbColor;
+
+  final Widget Function(BuildContext context, Color orbColor, Color emitColor)
+      builder;
+
+  @override
+  Widget build(BuildContext context) {
+    final duration = .5.seconds;
+
+    return TweenAnimationBuilder(
+        tween: ColorTween(begin: emitColor, end: emitColor),
+        duration: duration,
+        builder: (context, orbColor, __) {
+          return builder(context, orbColor!, emitColor);
+        });
   }
 }
