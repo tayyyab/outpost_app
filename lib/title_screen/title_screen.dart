@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 
 import '../orb_shader/orb_shader_config.dart';
 import '../orb_shader/orb_shader_widget.dart';
+import 'particale_overlay.dart';
 
 class TitleScreen extends StatefulWidget {
   const TitleScreen({super.key});
@@ -172,6 +173,13 @@ class _TitleScreenState extends State<TitleScreen>
                     pulseEffect: _pulseEffect,
                     image: AssetPaths.titleMgEmit,
                     lightAmt: _finalEmitLightAmt),
+                Positioned.fill(
+                    child: IgnorePointer(
+                  child: ParticleOverlay(
+                    color: orbColor,
+                    energy: _orbEnergy,
+                  ),
+                )),
                 Image.asset(AssetPaths.titleFgBase),
                 _LitImage(
                     color: orbColor,
