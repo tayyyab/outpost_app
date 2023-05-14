@@ -24,10 +24,10 @@ class OrbShaderWidget extends StatefulWidget {
   final void Function(double energy)? onUpdate;
 
   @override
-  State<OrbShaderWidget> createState() => _OrbShaderWidgetState();
+  State<OrbShaderWidget> createState() => OrbShaderWidgetState();
 }
 
-class _OrbShaderWidgetState extends State<OrbShaderWidget>
+class OrbShaderWidgetState extends State<OrbShaderWidget>
     with SingleTickerProviderStateMixin {
   final _heartbeatSequence = TweenSequence([
     TweenSequenceItem(tween: ConstantTween(0), weight: 40),
